@@ -1,0 +1,141 @@
+﻿	#plan_not_set {font-weight: bold;font-size: 1.8em;color: red;}
+	body {font-family: Verdana;background-color:#ededed} /* <------------ DO NOT ADD TO PRODUCTION */
+	#dash td {padding:9px;font-size:1.0em}
+	/* SOURCE: http://codepen.io/miyavibest/pen/HKixy */
+
+	.progressDiv {
+	  width: 84%;
+	  background: #fcfcfc;
+	  height: 325px;
+	  border: 1px solid #ccc;
+	  position: relative;
+	  left: 7%;
+	  top: 100px;
+	  display: inline-block;
+	  border-radius: 2px;
+	  box-shadow: 0px 1px 1px 1px #ccc;
+	}
+	/* Pie Chart */
+
+	.progress-pie-chart {
+	  width: 200px;
+	  height: 200px;
+	  border-radius: 50%;
+	  background-color: #E5E5E5;
+	  position: relative;
+	}
+
+	.progress-pie-chart.gt-50 {
+	  background-color: #003876;
+	}
+	
+	.ppc-progress {
+	  content: "";
+	  position: absolute;
+	  border-radius: 50%;
+	  left: calc(50% - 100px);
+	  top: calc(50% - 100px);
+	  width: 200px;
+	  height: 200px;
+	  clip: rect(0, 200px, 200px, 100px);
+	}
+
+	.ppc-progress .ppc-progress-fill {
+	  content: "";
+	  position: absolute;
+	  border-radius: 50%;
+	  left: calc(50% - 100px);
+	  top: calc(50% - 100px);
+	  width: 200px;
+	  height: 200px;
+	  clip: rect(0, 100px, 200px, 0);
+	  background: #003876;
+	  transform: rotate(60deg);
+	}
+
+	.gt-50 .ppc-progress {
+	  clip: rect(0, 100px, 200px, 0);
+	}
+
+	.gt-50 .ppc-progress .ppc-progress-fill {
+	  clip: rect(0, 200px, 200px, 100px);
+	  background: #E5E5E5;
+	}
+
+	.ppc-percents {
+	  content: "";
+	  position: absolute;
+	  border-radius: 50%;
+	  left: calc(50% - 173.91304px/2);
+	  top: calc(50% - 173.91304px/2);
+	  width: 173.91304px;
+	  height: 173.91304px;
+	  background: #fff;
+	  text-align: center;
+	  display: table;
+	}
+
+	.ppc-percents span {
+	  display: block;
+	  font-size: 2.6em;
+	  font-weight: bold;
+	  color: #003876;
+	}
+
+	.pcc-percents-wrapper {
+	  display: table-cell;
+	  vertical-align: middle;
+	}
+
+	.statChartHolder {
+	  width: 35%;
+	  position: relative;
+	  float: left;
+	  display: inline-block;
+	}
+
+
+/* OURS ------------- */
+	.pcc-percents-wrapper .gray {
+		color: #B6B5B5;
+		font-size: 0.385em;
+		font-weight: normal;
+	}
+
+	.blueLarge {
+	  color: #003876;
+	  font-size: 1.8em;
+	  font-weight: bold;
+	}
+
+	.tableHeader {
+	  color: #003876!important;
+	  font-weight: bold;
+	  background-color: #E5E5E5;
+	  padding: 6px !important;
+	  text-shadow: none !important;
+	  margin-bottom: 20px;
+	}
+	#dash table {
+		display:inline-block;
+		position: relative;
+		float: left;
+		
+	}
+	.stats {
+	border: none;
+	border-collapse:collapse;
+	text-align:left;
+	color: #B6B5B5;	
+	}
+	
+	#dash {
+	padding:15px;
+	text-align:center;
+	}
+	
+	#statBox {
+	position: relative;
+	display: inline-block;
+	vertical-align:middle;
+	}
