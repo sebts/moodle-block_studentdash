@@ -182,10 +182,16 @@ class block_studentdash extends block_base {
 													<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->coursesremaining.'</span> course'.(($USER->STUDENT_DASH->coursesremaining == 1) ? '' : 's').' left') : ('Congratulations on completing your degree</span>')).'<br>
 												</td>
 												<td>
-													<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->expectedgraduation.'</span><br>expected graduation<br><br>
+													<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->expectedgraduation.'</span><br>projected graduation<br><br>
 													<span class="blueLarge">'.$USER->STUDENT_DASH->creditsremaining.'</span> credit'.(($USER->STUDENT_DASH->creditsremaining == 1) ? '' : 's').' left<br>')
 													                        : ('    </span><br>             <br><br>               <br>'))
 												.'</td>
+											</tr>
+											<tr>
+												<td colspan="3" align="left">
+												*Undergraduate @ 27 credits/yr, <br> 
+												Graduate @ 21 credits/yr.
+												</td>
 											</tr>
 											<tr>
 											<td colspan="3" align="left">'.(($USER->STUDENT_DASH->advisorfirst == '') ? '' : 'Your Academic Advisor is '.$USER->STUDENT_DASH->advisorfirst.' '.$USER->STUDENT_DASH->advisorlast).'</td>
