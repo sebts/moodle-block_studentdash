@@ -35,8 +35,8 @@ class block_studentdash extends block_base {
 
     function get_content() {
         global $CFG, $OUTPUT, $USER;
-        $UNGRAD_FULL_TIME = 15; //These "full time" hours are based on estimates of total hours taken over the course of a full year, counting what may be taken during Summer or J terms
-        $GRAD_FULL_TIME = 12;   //They will be used to calculate expected graduation, which will only take place in Dec or May, so the assumed full time hours are made slightly larger and then the remaining semesters calculated from them is doubled.
+        $UNGRAD_FULL_TIME = 27; //These "full time" hours are based on estimates of total hours taken over the course of a full year (12cr./sem + 3cr. in summer or J term)
+        $GRAD_FULL_TIME = 21;   //They will be used to calculate expected graduation, which will only take place in Dec or May, so the assumed full time hours are made slightly larger and then the remaining semesters calculated from them is doubled.
 
         if ($this->content !== null) {
             return $this->content;
@@ -69,75 +69,69 @@ class block_studentdash extends block_base {
             $USER->STUDENT_DASH->coursesremaining = $USER->STUDENT_DASH->coursemin - $USER->STUDENT_DASH->coursestaken;
             $USER->STUDENT_DASH->creditmin = $USER->STUDENT_DASH->dbinfo->fields['CREDIT_MIN'];
             $USER->STUDENT_DASH->creditstaken = $USER->STUDENT_DASH->dbinfo->fields['CREDITS_TAKEN'];
-            
-            
-            
-            
-            
-            
             $USER->STUDENT_DASH->creditsremaining = $USER->STUDENT_DASH->creditmin - $USER->STUDENT_DASH->creditstaken;
             $USER->STUDENT_DASH->percentcompletion = 100 * $USER->STUDENT_DASH->creditstaken / $USER->STUDENT_DASH->creditmin;
-            $graduationyti = (($USER->STUDENT_DASH->program == 'UNGRAD') ? 
-                             ($USER->STUDENT_DASH->activeyti + ceil(2 * $USER->STUDENT_DASH->creditsremaining / $UNGRAD_FULL_TIME)) 
-                           : ($USER->STUDENT_DASH->activeyti + ceil(2 * $USER->STUDENT_DASH->creditsremaining / $GRAD_FULL_TIME)));
-            
-            $USER->STUDENT_DASH->expectedgraduation = 0 + $USER->STUDENT_DASH->activeyear + (int)($graduationyti / 4);
-            
+            $numberTermsRemain = (($USER->STUDENT_DASH->program == 'UNGRAD') ? 
+                             ceil($USER->STUDENT_DASH->creditsremaining / $UNGRAD_FULL_TIME)
+                           : ceil($USER->STUDENT_DASH->creditsremaining / $GRAD_FULL_TIME));
+			$USER->STUDENT_DASH->expectedgraduationYr = $USER->STUDENT_DASH->activeyear + (int)($numberTermsRemain);
+	
+			
             //We only want expected graduation to be a Fall or Spring semester, so we push it forward one term if it falls in Jan or Summer
 		    switch ($USER->STUDENT_DASH->activeterm) {
 			    case 'JANUARY':
-				    switch ($graduationyti % 4) {
+				    switch ($numberTermsRemain % 4) {
 				        case 1:
 				        case 0:
-				            $USER->STUDENT_DASH->expectedgraduation = ''.'SPRING '."{$USER->STUDENT_DASH->expectedgraduation}";
+				            $USER->STUDENT_DASH->expectedgraduation = ''.'SPRING '."{$USER->STUDENT_DASH->expectedgraduationYr}";
 				            break;
 				        case 2:
 				        case 3:
-				            $USER->STUDENT_DASH->expectedgraduation = ''.'FALL '."{$USER->STUDENT_DASH->expectedgraduation}";
+				            $USER->STUDENT_DASH->expectedgraduation = ''.'FALL '."{$USER->STUDENT_DASH->expectedgraduationYr}";
 				            break;
 				    }
 			        break;
     			case 'SPRING':
-	    			switch ($graduationyti % 4) {
+	    			switch ($numberTermsRemain % 4) {
 				        case 1:
 				        case 2:
-				            $USER->STUDENT_DASH->expectedgraduation = ''.'FALL '."{$USER->STUDENT_DASH->expectedgraduation}";
+				            $USER->STUDENT_DASH->expectedgraduation = ''.'FALL '."{$USER->STUDENT_DASH->expectedgraduationYr}";
 				            break;
 				        case 3:
                             $USER->STUDENT_DASH->expectedgraduation++;
-				            $USER->STUDENT_DASH->expectedgraduation = ''.'SPRING '."{$USER->STUDENT_DASH->expectedgraduation}";
+				            $USER->STUDENT_DASH->expectedgraduation = ''.'SPRING '."{$USER->STUDENT_DASH->expectedgraduationYr}";
 				            break;
 				        case 0:
-				            $USER->STUDENT_DASH->expectedgraduation = ''.'SPRING '."{$USER->STUDENT_DASH->expectedgraduation}";
+				            $USER->STUDENT_DASH->expectedgraduation = ''.'SPRING '."{$USER->STUDENT_DASH->expectedgraduationYr}";
 				            break;
 				    }
 	    		    break;
 	    		case 'SUMMER':
-	    		    switch ($graduationyti % 4) {
+	    		    switch ($numberTermsRemain % 4) {
 				        case 1:
 				        case 0:
-				            $USER->STUDENT_DASH->expectedgraduation = ''.'FALL '."{$USER->STUDENT_DASH->expectedgraduation}";
+				            $USER->STUDENT_DASH->expectedgraduation = ''.'FALL '."{$USER->STUDENT_DASH->expectedgraduationYr}";
 				            break;
 				        case 2:
 				        case 3:
                             $USER->STUDENT_DASH->expectedgraduation++;
-				            $USER->STUDENT_DASH->expectedgraduation = ''.'SPRING '."{$USER->STUDENT_DASH->expectedgraduation}";
+				            $USER->STUDENT_DASH->expectedgraduation = ''.'SPRING '."{$USER->STUDENT_DASH->expectedgraduationYr}";
 				            break;
 				    }
 	    		    break;
 	    		case 'FALL':
-	    		    switch ($graduationyti % 4) {
+	    		    switch ($numberTermsRemain % 4) {
 				        case 1:
 				        case 2:
                             $USER->STUDENT_DASH->expectedgraduation++;
-				            $USER->STUDENT_DASH->expectedgraduation = ''.'SPRING '."{$USER->STUDENT_DASH->expectedgraduation}";
+				            $USER->STUDENT_DASH->expectedgraduation = ''.'SPRING '."{$USER->STUDENT_DASH->expectedgraduationYr}";
 				            break;
 				        case 3:
                             $USER->STUDENT_DASH->expectedgraduation++;
-    				        $USER->STUDENT_DASH->expectedgraduation = ''.'FALL '."{$USER->STUDENT_DASH->expectedgraduation}";
+    				        $USER->STUDENT_DASH->expectedgraduation = ''.'FALL '."{$USER->STUDENT_DASH->expectedgraduationYr}";
 				            break;
 				        case 0:
-				            $USER->STUDENT_DASH->expectedgraduation = ''.'FALL '."{$USER->STUDENT_DASH->expectedgraduation}";
+				            $USER->STUDENT_DASH->expectedgraduation = ''.'FALL '."{$USER->STUDENT_DASH->expectedgraduationYr}";
 				            break;
 				    }
 	    		    break;
