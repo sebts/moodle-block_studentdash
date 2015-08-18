@@ -116,6 +116,15 @@
 	  text-shadow: none !important;
 	  margin-bottom: 20px;
 	}
+	
+	.blockHeader h2 {
+	  color: #003876!important;
+	  font-weight: bold !important;
+	  background-color: #E5E5E5 !important;
+	  text-shadow: none !important;
+	  text-transform: uppercase !important;
+	  line-height: 20px !important;
+	}
 	#dash table {
 		display:inline-block;
 		position: relative;
