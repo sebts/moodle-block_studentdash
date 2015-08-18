@@ -75,7 +75,7 @@ class block_studentdash extends block_base {
                              ceil($USER->STUDENT_DASH->creditsremaining / $UNGRAD_FULL_TIME)
                            : ceil($USER->STUDENT_DASH->creditsremaining / $GRAD_FULL_TIME));
 			$USER->STUDENT_DASH->expectedgraduationYr = $USER->STUDENT_DASH->activeyear + (int)($numberTermsRemain);
-	
+			
 			
             //We only want expected graduation to be a Fall or Spring semester, so we push it forward one term if it falls in Jan or Summer
 		    switch ($USER->STUDENT_DASH->activeterm) {
@@ -137,71 +137,81 @@ class block_studentdash extends block_base {
 	    		    break;
 		    }
         }
-        
-        $this->content          = new stdClass;
+		
+		// IF PHD STUDENT, DON'T DISPLAY BLOCK
+		if ($USER->STUDENT_DASH->degree !== PHD ) {
+			$this->title = '<span class="blockHeader">'.$USER->STUDENT_DASH->degreetitle.' in '.$USER->STUDENT_DASH->curriculumtitle.'</span>';
+			$this->content          = new stdClass;
 
-        //This is the actual block html
-        $this->content->text    = ($USER->STUDENT_DASH->acaplansetup == 'Y') ?
-                                    '<body>
-									<script type="text/javascript">
-									$(function() {
-									  var $ppc = $(\'.progress-pie-chart\'),
-										percent = parseInt('.$USER->STUDENT_DASH->percentcompletion.'),
-										deg = 360 * percent / 100;
-									  if (percent > 50) {
-										$ppc.addClass(\'gt-50\');
-									  }
-									  $(\'.ppc-progress-fill\').css(\'transform\', \'rotate(\' + deg + \'deg)\');
-									  $(\'.ppc-percents span\').html(percent + \'%<br><br><span class="gray">complete</span>\');
-									});
-								</script>
-
-								<div id="dash">
-									<h3 class="tableHeader">'.$USER->STUDENT_DASH->degreetitle.' in '.$USER->STUDENT_DASH->curriculumtitle.'</h3>
-									<div id="statBox" class="stats">
-										<div class="statChartHolder">
-										<div class="progress-pie-chart" data-percent="30">
-											<!--Pie Chart -->
-												<div class="ppc-progress">
-													<div class="ppc-progress-fill"></div>
-												</div>
-											<div class="ppc-percents">
-												<div class="pcc-percents-wrapper">
-												  <span>%</span>
-												</div>
-											</div>
-										</div>
-										<!--End Chart -->
-										</div>
-									</div>
-									<div id="statBox" style="margin-left:25px"> 
-										<table class="stats">
-											<tr>
-												<td>
-													<span class="blueLarge">'.(($USER->STUDENT_DASH->primarygpa == '.0000') ? 'N/A' : $USER->STUDENT_DASH->primarygpa).'</span><br>overall GPA <br><br>
-													<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->coursesremaining.'</span> course'.(($USER->STUDENT_DASH->coursesremaining == 1) ? '' : 's').' left') : ('Congratulations on completing your degree</span>')).'<br>
-												</td>
-												<td>
-													<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->expectedgraduation.'</span><br>projected graduation<br><br>
-													<span class="blueLarge">'.$USER->STUDENT_DASH->creditsremaining.'</span> credit'.(($USER->STUDENT_DASH->creditsremaining == 1) ? '' : 's').' left<br>')
-													                        : ('    </span><br>             <br><br>               <br>'))
-												.'</td>
-											</tr>
-											<tr>
-												<td colspan="3" align="left">
-												*Undergraduate @ 27 credits/yr, <br> 
-												Graduate @ 21 credits/yr.
-												</td>
-											</tr>
-											<tr>
-											<td colspan="3" align="left">'.(($USER->STUDENT_DASH->advisorfirst == '') ? '' : 'Your Academic Advisor is '.$USER->STUDENT_DASH->advisorfirst.' '.$USER->STUDENT_DASH->advisorlast).'</td>
-											</tr>
-										</table>
-									</div>
-									</div>
-									</body>'
-                                  :'<div id="plan_not_set">YOUR ACADEMIC PLAN CANNOT BE FOUND! Please see the Registrar\'s Office to set your academic plan or <a href="mailto:registrar@sebts.edu?Subject=Please%20set%20academic%20plan%20for%20studentID:%20'.$USER->STUDENT_DASH->peopleid.'">click here</a> to request to set your academic plan.</div>';
-
+			//This is the actual block html
+			$this->content->text    = ($USER->STUDENT_DASH->acaplansetup == 'Y') ?
+			'<body class="noShow">
+			<script type="text/javascript">
+			$(function() {
+			  var $ppc = $(\'.progress-pie-chart\'),
+				percent = parseInt('.$USER->STUDENT_DASH->percentcompletion.'),
+				deg = 360 * percent / 100;
+			  if (percent > 50) {
+				$ppc.addClass(\'gt-50\');
+			  }
+			  $(\'.ppc-progress-fill\').css(\'transform\', \'rotate(\' + deg + \'deg)\');
+			  $(\'.ppc-percents span\').html(percent + \'%<br><br><span class="gray">complete</span>\');
+			});
+		</script>
+		<script>
+			$(document).ready(function(){
+				$("#showHide").click(function(){
+					$("#dash").toggle();
+				});
+			});
+		</script>
+			<br />
+			<button id="showHide">Show/Hide Stats</button>
+		<div id="dash" style="display:none">
+			<div id="statBox" class="stats">
+				<div class="statChartHolder">
+				<div class="progress-pie-chart" data-percent="30">
+					<!--Pie Chart -->
+						<div class="ppc-progress">
+							<div class="ppc-progress-fill"></div>
+						</div>
+					<div class="ppc-percents">
+						<div class="pcc-percents-wrapper">
+						  <span>%</span>
+						</div>
+					</div>
+				</div>
+				<!--End Chart -->
+				</div>
+			</div>
+			<div id="statBox" style="margin-left:25px"> 
+				<table class="stats">
+					<tr>
+						<td>
+							<span class="blueLarge">'.(($USER->STUDENT_DASH->primarygpa == '.0000') ? 'N/A' : $USER->STUDENT_DASH->primarygpa).'</span><br>overall GPA <br><br>
+							<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->coursesremaining.'</span> course'.(($USER->STUDENT_DASH->coursesremaining == 1) ? '' : 's').' left') : ('Congratulations on completing your degree</span>')).'<br>
+						</td>
+						<td>
+							<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->expectedgraduation.' *</span><br>projected graduation<br><br>
+							<span class="blueLarge">'.$USER->STUDENT_DASH->creditsremaining.'</span> credit'.(($USER->STUDENT_DASH->creditsremaining == 1) ? '' : 's').' left<br>')
+													: ('    </span><br>             <br><br>               <br>'))
+						.'</td>
+					</tr>
+					<tr>
+						<td colspan="3" align="left">
+						*Projected graduation date calculated using 27 credits/yr <br />
+						for Undergraduate and 21 credits/yr for Graduate Students
+						</td>
+					</tr>
+					<tr>
+					<td colspan="3" align="left">'.(($USER->STUDENT_DASH->advisorfirst == '') ? '' : 'Your Academic Advisor is '.$USER->STUDENT_DASH->advisorfirst.' '.$USER->STUDENT_DASH->advisorlast).'</td>
+					</tr>
+				</table>
+			</div>
+			</div>
+			</body>'
+		  :'<div id="plan_not_set">YOUR ACADEMIC PLAN CANNOT BE FOUND! Please see the Registrar\'s Office to set your academic plan or <a href="mailto:registrar@sebts.edu?Subject=Please%20set%20academic%20plan%20for%20studentID:%20'.$USER->STUDENT_DASH->peopleid.'">click here</a> to request to set your academic plan.</div>';
+		}
         return $this->content;
     }
 
@@ -224,6 +234,6 @@ class block_studentdash extends block_base {
     }
     
     public function hide_header() {
-        return true;
+        return false;
     }
 }
