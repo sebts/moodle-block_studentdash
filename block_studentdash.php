@@ -138,8 +138,8 @@ class block_studentdash extends block_base {
 		    }
         }
 		
-		// IF PHD STUDENT, DON'T DISPLAY BLOCK
-		if ($USER->STUDENT_DASH->degree !== PHD ) {
+		// HIDE BLOCK FROM PHD AND NON-STUDENT USERNAMES
+		if (($USER->STUDENT_DASH->degree !== PHD) && (strpos ($username,'000') !== false) ) {
 			$this->title = '<span class="blockHeader">'.$USER->STUDENT_DASH->degreetitle.' in '.$USER->STUDENT_DASH->curriculumtitle.'</span>';
 			$this->content          = new stdClass;
 
