@@ -140,7 +140,7 @@ class block_studentdash extends block_base {
 		
 		// HIDE BLOCK FROM PHD AND NON-STUDENT USERNAMES
 		if ($USER->STUDENT_DASH->degree !== PHD)  {
-			$this->title = '<span class="blockHeader">'.$USER->STUDENT_DASH->degreetitle.' in '.$USER->STUDENT_DASH->curriculumtitle.'</span>';
+			$this->title = 'My Academic Progress';
 			$this->content          = new stdClass;
 			
 			//This is the actual block html
@@ -170,6 +170,7 @@ class block_studentdash extends block_base {
 				<br />
 				<button id="showHide">Show/Hide Stats</button>
 			<div id="dash" style="display:none">
+				<h3 class="tableHeader">'.$USER->STUDENT_DASH->degreetitle.' in '.$USER->STUDENT_DASH->curriculumtitle.'</h3>
 				<div id="statBox" class="stats">
 					<div class="statChartHolder">
 					<div class="progress-pie-chart" data-percent="30">
@@ -202,7 +203,9 @@ class block_studentdash extends block_base {
 						<tr>
 							<td colspan="3" align="left">
 							*Projected graduation date calculated using 27 credits/yr <br />
-							for Undergraduate and 21 credits/yr for Graduate Students
+							for Undergraduate and 21 credits/yr for Graduate Students. <br />
+							If you have any questions about this information, <br />
+							please contact the registrar <a href="mailto:registrar@sebts.edu?Subject=Question%20regarding%20Moodle%20Academic%20progress%20(Student%20ID:%20'.$USER->STUDENT_DASH->peopleid.')">here</a>.
 							</td>
 						</tr>
 						<tr>
