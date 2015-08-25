@@ -61,9 +61,8 @@ class block_studentdash extends block_base {
             $USER->STUDENT_DASH->curriculum = $USER->STUDENT_DASH->dbinfo->fields['CURRICULUM'];
             $USER->STUDENT_DASH->degreetitle = $USER->STUDENT_DASH->dbinfo->fields['DegreeTitle'];
             $USER->STUDENT_DASH->curriculumtitle = $USER->STUDENT_DASH->dbinfo->fields['CurriculumTitle'];
-            $USER->STUDENT_DASH->activeyti = $USER->STUDENT_DASH->dbinfo->fields['YearTermIndex'];
-            $USER->STUDENT_DASH->activeyear = $USER->STUDENT_DASH->dbinfo->fields['LatestAcadYear'];
-            $USER->STUDENT_DASH->activeterm = $USER->STUDENT_DASH->dbinfo->fields['LatestAcadTerm'];
+            $USER->STUDENT_DASH->currentyear = $USER->STUDENT_DASH->dbinfo->fields['CurrentYear'];
+            $USER->STUDENT_DASH->currentterm = $USER->STUDENT_DASH->dbinfo->fields['CurrentTerm'];
             $USER->STUDENT_DASH->acaplansetup = $USER->STUDENT_DASH->dbinfo->fields['ACA_PLAN_SETUP'];
             $USER->STUDENT_DASH->advisorfirst = $USER->STUDENT_DASH->dbinfo->fields['ADVISOR_FNAME'];
             $USER->STUDENT_DASH->advisorlast = $USER->STUDENT_DASH->dbinfo->fields['ADVISOR_LNAME'];
@@ -99,8 +98,8 @@ class block_studentdash extends block_base {
 							var creditsPerTerm = parseInt(document.getElementById("creditsPerTerm").innerHTML);
 
 							// Assign a numerical value to the current Year/Term to make calculation easier.
-							var activeYearTermValue = parseFloat('.$USER->STUDENT_DASH->activeyear.');
-							var activeTerm = "'.$USER->STUDENT_DASH->activeterm.'";
+							var activeYearTermValue = parseFloat('.$USER->STUDENT_DASH->currentyear.');
+							var activeTerm = "'.$USER->STUDENT_DASH->currentterm.'";
 							switch (activeTerm) {
 								case "JANUARY":
 									activeYearTermValue = activeYearTermValue + 0.00;
