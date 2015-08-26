@@ -35,7 +35,7 @@ class block_studentdash extends block_base {
 
     function get_content() {
         global $CFG, $OUTPUT, $USER;
-		$UNGRAD_FULL_TIME = 12;		// Use "Full time" hours as defined in PowerCampus as the default number
+		$UNGRAD_FULL_TIME = 15;		// Use "Full time" hours as defined in PowerCampus as the default number
 		$GRAD_FULL_TIME = 9;				// of credit hours used to calculate the expected graduation Year/Term.
 
         if ($this->content !== null) {
@@ -76,7 +76,7 @@ class block_studentdash extends block_base {
             $USER->STUDENT_DASH->percentcompletion = 100 * $USER->STUDENT_DASH->creditstaken / $USER->STUDENT_DASH->creditmin;
         }
 		
-		if ($USER->STUDENT_DASH->degree != 'PHD')  {    // Show block only for non-PHD students
+		if ($USER->STUDENT_DASH->degree != 'PHD' and $USER->STUDENT_DASH->curriculumtitle != 'DLSA')  {    // Exclude block from non-PHD and DLSA students
 			$this->title = 'My Academic Progress';
 			$this->content = new stdClass;
 
@@ -88,7 +88,7 @@ class block_studentdash extends block_base {
 					<script type="text/javascript">
 					    
                         // load up default value for the minimum number of credit hours considered as a "full time" student
-					    var initialValue = '. (($USER->STUDENT_DASH->program == 'GRAD') ? $GRAD_FULL_TIME : $UNGRAD_FULL_TIME).';
+					    var initialValue = '. (($USER->STUDENT_DASH->program == 'UNGRAD') ? $UNGRAD_FULL_TIME : $GRAD_FULL_TIME ).';
 					    function loadInitial() {
 						    document.getElementById("creditsPerTerm").innerHTML = initialValue;
 					    }
