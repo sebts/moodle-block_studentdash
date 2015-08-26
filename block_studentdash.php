@@ -92,6 +92,15 @@ class block_studentdash extends block_base {
 					    function loadInitial() {
 						    document.getElementById("creditsPerTerm").innerHTML = initialValue;
 					    }
+
+						function tooltipMoreinfo(){
+							if (document.getElementById("tooltipInfoText").style.display == "block"){
+								document.getElementById("tooltipInfoText").style.display = "none";
+							}
+							else {
+								document.getElementById("tooltipInfoText").style.display = "block";
+							}
+						}
 					
 						function recalculate() {
 							var creditsRemaining =  '.$USER->STUDENT_DASH->creditsremaining.';
@@ -176,12 +185,26 @@ class block_studentdash extends block_base {
 								$("#dash").toggle();
 							});
 						});
+						function buttonText(){
+							if (document.getElementById("showHide").innerHTML === "Show Stats"){
+								document.getElementById("showHide").innerHTML = "Hide Stats";
+							}
+							else {
+								document.getElementById("showHide").innerHTML = "Show Stats";
+							}
+						}
 					</script>
 					<br />
-					<button id="showHide">Show/Hide Stats</button>
+					<button id="showHide" onclick="buttonText()">Show Stats</button>
+					<img src="'.$CFG->wwwroot.'/blocks/studentdash/question-tooltip.gif" width="30px" height="30px" style="position:relative;float:right;" onclick="tooltipMoreinfo()"/>
+					<br />
+					<div id="tooltipInfoText" style="display:none;">
+						Only primary degree is listed. Dual-enrolled or multiple-degree students can access academic plans and transcripts via <a href="http://selfservice.sebts.edu" target="_blank">Self-Service.</a> New students should receive an academic plan within a few weeks after their first term.<br /><br/>
+						If you have any questions about this information, please contact the registrar <a href="mailto:registrar@sebts.edu?Subject=Question%20regarding%20Moodle%20Academic%20progress%20(Student%20ID:%20'.$USER->STUDENT_DASH->peopleid.')">here</a>.
+					</div>
 					<div id="dash">
 						<h3 class="tableHeader">'.$USER->STUDENT_DASH->degreetitle.' in '.$USER->STUDENT_DASH->curriculumtitle.'</h3>
-						<div id="statBox" class="stats">
+						<div id="statBox" class="stats" style="margin-bottom:20px;">
 							<div class="statChartHolder">
 								<!--Pie Chart -->
 								<div class="progress-pie-chart" data-percent="30">
@@ -202,16 +225,16 @@ class block_studentdash extends block_base {
 							<tr>
 								<td>
 									<span class="blueLarge">'.(($USER->STUDENT_DASH->primarygpa == '.0000') ? 'N/A' : $USER->STUDENT_DASH->primarygpa).'</span><br>overall GPA <br><br>
-									<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->coursesremaining.'</span> course'.(($USER->STUDENT_DASH->coursesremaining == 1) ? '' : 's').' left') : ('Congratulations on completing your degree</span>')).'<br>
+									<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->coursesremaining.'</span> course'.(($USER->STUDENT_DASH->coursesremaining == 1) ? '' : 's').'&nbsp;left') : ('Congratulations on completing your degree</span>')).'<br>
 								</td>
 								<td>
 									<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? '<span id="expectedgraduation"></span>&nbsp;*</span><br>projected graduation<br><br>
-									<span class="blueLarge">'.$USER->STUDENT_DASH->creditsremaining.'</span> credit'.(($USER->STUDENT_DASH->creditsremaining == 1) ? '' : 's').' left<br>'
+									<span class="blueLarge">'.$USER->STUDENT_DASH->creditsremaining.'</span> credit'.(($USER->STUDENT_DASH->creditsremaining == 1) ? '' : 's').'&nbsp;left<br>'
 															: ('    </span><br>             <br><br>               <br>'))
 								.'</td>
 							</tr>
 							<tr>
-								<td colspan="3" align="left">'.(($USER->STUDENT_DASH->percentcompletion < 100) ?
+								<td width="400" colspan="3" align="left">'.(($USER->STUDENT_DASH->percentcompletion < 100) ?
 									'<!-------------------------------------------------------- BEGIN SLIDER -->
 									<div id ="slider-tooltip"></div>
 									<script src="'.$CFG->wwwroot.'/blocks/studentdash/nouislider.min.js"></script>
@@ -265,10 +288,7 @@ class block_studentdash extends block_base {
 									</script>
 									<br />
 									<!-------------------------------------------------------- END SLIDER -->
-									* Based on <span id="creditsPerTerm"></span> credits/semester.<br /> <br />' : '')
-									.'If you have any questions about this information, <br />
-									please contact the registrar <a href="mailto:registrar@sebts.edu?Subject=Question%20regarding%20Moodle%20Academic%20progress%20(Student%20ID:%20'.$USER->STUDENT_DASH->peopleid.')">here</a>.
-									<br />
+									* Based on <span id="creditsPerTerm"></span> credits/semester.&nbsp;&nbsp;' : '').'
 								</td>
 							</tr>
 							<tr>
@@ -280,7 +300,10 @@ class block_studentdash extends block_base {
 				</body>';
 			}
 			if ($USER->STUDENT_DASH->acaplansetup == 'N') {
-				$content = '<div id="plan_not_set">YOUR ACADEMIC PLAN CANNOT BE FOUND! Please see the Registrar\'s Office to set your academic plan or <a href="mailto:registrar@sebts.edu?Subject=Please%20set%20academic%20plan%20for%20studentID:%20'.$USER->STUDENT_DASH->peopleid.'">click here</a> to request to set your academic plan.</div>';			}
+				$content = '<div id="plan_not_set"><strong>Your academic plan cannot be found!</strong><br /><br />
+							Please see the Registrar\'s Office to set your academic plan or <a href="mailto:registrar@sebts.edu?Subject=Please%20set%20academic%20plan%20for%20studentID:%20'.$USER->STUDENT_DASH->peopleid.'">click here</a> to request to set your academic plan.<br /></br>
+							<strong>New students should receive an academic plan within a few weeks after their first term.</strong></div>';
+							}
 		$this->content->text = $content;
 
 		}
