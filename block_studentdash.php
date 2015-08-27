@@ -237,8 +237,9 @@ class block_studentdash extends block_base {
 								<td colspan="1">
 									<span class="blueLarge" id="creditsPerTerm"></span><br />credits/semester
 								</td>
-								<td colspan="2" width="220" align="left" style="padding-top:0px;">'.(($USER->STUDENT_DASH->percentcompletion < 100) ?
+								<td colspan="2" width="220" align="left">'.(($USER->STUDENT_DASH->percentcompletion < 100) ?
 									'<!-------------------------------------------------------- BEGIN SLIDER -->
+									&nbsp;
 									<div id ="slider"></div>
 									<script src="'.$CFG->wwwroot.'/blocks/studentdash/nouislider.min.js"></script>
 									<script>

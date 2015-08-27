@@ -163,10 +163,11 @@
     margin-left: 15px !important;
 }
 
-.noUi-handle {
+.noUi-handle, .noUi-active {
 	cursor: w-resize !important;
 	box-shadow: none !important;
 	background-color: #003876  !important;
+	border: none !important;
 }
 
 
