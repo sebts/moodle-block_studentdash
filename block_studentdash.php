@@ -195,11 +195,11 @@ class block_studentdash extends block_base {
 						}
 					</script>
 					<br />
-					<button id="showHide" onclick="buttonText()">Show Stats</button>
-					<img src="'.$CFG->wwwroot.'/blocks/studentdash/question-tooltip.gif" width="30px" height="30px" style="position:relative;float:right;" onclick="tooltipMoreinfo()"/>
+					<button id="showHide" onclick="buttonText()" style="width:100px;">Show Stats</button>
+					<i class="fa fa-question-circle fa-2x" style="margin-left:20px;cursor:hand;cursor:pointer;" onclick="tooltipMoreinfo()"></i>
 					<br />
 					<div id="tooltipInfoText" style="display:none;">
-						Only primary degree is listed. Dual-enrolled or multiple-degree students can access academic plans and transcripts via <a href="http://selfservice.sebts.edu" target="_blank">Self-Service.</a> New students should receive an academic plan within a few weeks after their first term.<br /><br/>
+						Only your primary degree is listed. Dual-enrolled or multiple-degree students can access academic plans and transcripts via <a href="https://selfservice.sebts.edu/SelfService/Records/AcademicPlan.aspx" target="_blank">Self-Service.</a> New students should receive an academic plan within a few weeks after their first term.<br /><br/>
 						If you have any questions about this information, please contact the registrar <a href="mailto:registrar@sebts.edu?Subject=Question%20regarding%20Moodle%20Academic%20progress%20(Student%20ID:%20'.$USER->STUDENT_DASH->peopleid.')">here</a>.
 					</div>
 					<div id="dash">
@@ -224,35 +224,38 @@ class block_studentdash extends block_base {
 						<table class="stats">
 							<tr>
 								<td>
-									<span class="blueLarge">'.(($USER->STUDENT_DASH->primarygpa == '.0000') ? 'N/A' : $USER->STUDENT_DASH->primarygpa).'</span><br>overall GPA <br><br>
-									<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->coursesremaining.'</span> course'.(($USER->STUDENT_DASH->coursesremaining == 1) ? '' : 's').'&nbsp;left') : ('Congratulations on completing your degree</span>')).'<br>
+									<span class="blueLarge">'.(($USER->STUDENT_DASH->primarygpa == '.0000') ? 'N/A' : $USER->STUDENT_DASH->primarygpa).'</span><br />overall GPA <br><br>
+									<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->coursesremaining.'</span><br />course'.(($USER->STUDENT_DASH->coursesremaining == 1) ? '' : 's').'&nbsp;left') : ('Congratulations on completing your degree</span>')).'<br>
 								</td>
 								<td>
-									<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? '<span id="expectedgraduation"></span>&nbsp;*</span><br>projected graduation<br><br>
-									<span class="blueLarge">'.$USER->STUDENT_DASH->creditsremaining.'</span> credit'.(($USER->STUDENT_DASH->creditsremaining == 1) ? '' : 's').'&nbsp;left<br>'
+									<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? '<span id="expectedgraduation"></span></span><br />projected graduation<br><br>
+									<span class="blueLarge">'.$USER->STUDENT_DASH->creditsremaining.'</span><br/>credit'.(($USER->STUDENT_DASH->creditsremaining == 1) ? '' : 's').'&nbsp;left<br>'
 															: ('    </span><br>             <br><br>               <br>'))
 								.'</td>
 							</tr>
 							<tr>
-								<td width="400" colspan="3" align="left">'.(($USER->STUDENT_DASH->percentcompletion < 100) ?
+								<td colspan="1">
+									<span class="blueLarge" id="creditsPerTerm"></span><br />credits/semester
+								</td>
+								<td colspan="2" width="220" align="left" style="padding-top:0px;">'.(($USER->STUDENT_DASH->percentcompletion < 100) ?
 									'<!-------------------------------------------------------- BEGIN SLIDER -->
-									<div id ="slider-tooltip"></div>
+									<div id ="slider"></div>
 									<script src="'.$CFG->wwwroot.'/blocks/studentdash/nouislider.min.js"></script>
 									<script>
 										// create slider
-										var tooltipSlider = document.getElementById("slider-tooltip");
-										noUiSlider.create(tooltipSlider, {
+										var slider = document.getElementById("slider");
+										noUiSlider.create(slider, {
 											start: initialValue,
 											range: {
 													"min": 3,
-													"14.29%": 6,
-													"28.58%": 9,
-													"42.87%": 12,
-													"57.16%": 15,
-													"71.45%": 18,
-													"85.74%": 21,
-													"max": 24
+													"16.66%": 6,
+													"33.33%": 9,
+													"50%": 12,
+													"66.66%": 15,
+													"83.33%": 18,
+													"max": 21
 												},	
+											snap: true,
 											snap: true,
 											//pips: {
 											//	mode: "values",
@@ -262,33 +265,25 @@ class block_studentdash extends block_base {
 										});
 									</script>
 									<script>
-										var tipHandles = tooltipSlider.getElementsByClassName("noUi-handle"),
+										var tipHandles = slider.getElementsByClassName("noUi-handle"),
 										tooltips = [];
 										// Add divs to the slider handles.
 										for ( var i = 0; i < tipHandles.length; i++ ){
 											tooltips[i] = document.createElement("div");
 											tipHandles[i].appendChild(tooltips[i]);
 										}
-										// Add a class for styling
-										tooltips[0].className += "tooltip";
-										// Add additional markup
-										tooltips[0].innerHTML = "<spanTip></spanTip>";
-										// Replace the tooltip reference with the span we just added
-										tooltips[0] = tooltips[0].getElementsByTagName("spanTip")[0];
 									
-										// When the slider changes, write the value to the tooltips.
-										tooltipSlider.noUiSlider.on("update", function( values, handle ){
+										// When the slider changes, write the value to creditsPerTerm.
+										slider.noUiSlider.on("update", function( values, handle ){
 											//split apart at decimal since default .js is for 2 decimal places
 											var noDecimal = values[handle].split(".")[0]; 
-											//tooltips[handle].innerHTML = noDecimal; 
 											// set text of span named "creditsPerTerm"
 											document.getElementById("creditsPerTerm").innerHTML = noDecimal;
 											recalculate();
 										});
 									</script>
-									<br />
-									<!-------------------------------------------------------- END SLIDER -->
-									* Based on <span id="creditsPerTerm"></span> credits/semester.&nbsp;&nbsp;' : '').'
+									
+									<!-------------------------------------------------------- END SLIDER -->' : '').'
 								</td>
 							</tr>
 							<tr>
