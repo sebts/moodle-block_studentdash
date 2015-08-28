@@ -60,7 +60,6 @@ class block_studentdash extends block_base {
             $USER->STUDENT_DASH->degree = $USER->STUDENT_DASH->dbinfo->fields['DEGREE'];
             $USER->STUDENT_DASH->curriculum = $USER->STUDENT_DASH->dbinfo->fields['CURRICULUM'];
             $USER->STUDENT_DASH->degreetitle = $USER->STUDENT_DASH->dbinfo->fields['DegreeTitle'];
-            $USER->STUDENT_DASH->curriculumtitle = $USER->STUDENT_DASH->dbinfo->fields['CurriculumTitle'];
             $USER->STUDENT_DASH->currentyear = $USER->STUDENT_DASH->dbinfo->fields['CurrentYear'];
             $USER->STUDENT_DASH->currentterm = $USER->STUDENT_DASH->dbinfo->fields['CurrentTerm'];
             $USER->STUDENT_DASH->acaplansetup = $USER->STUDENT_DASH->dbinfo->fields['ACA_PLAN_SETUP'];
@@ -164,7 +163,7 @@ class block_studentdash extends block_base {
 							}
 							
 							// Display the expected graduating Year/Term 
-							document.getElementById("expectedgraduation").innerHTML = expectedTerm + " " + expectedYear;
+							document.getElementById("expectedgraduation").innerHTML = expectedTerm + "&nbsp;" + expectedYear;
 						}
 					</script>
 					<script type="text/javascript">
@@ -203,7 +202,7 @@ class block_studentdash extends block_base {
 						If you have any questions about this information, please contact the registrar <a href="mailto:registrar@sebts.edu?Subject=Question%20regarding%20Moodle%20Academic%20progress%20(Student%20ID:%20'.$USER->STUDENT_DASH->peopleid.')">here</a>.
 					</div>
 					<div id="dash">
-						<h3 class="tableHeader">'.$USER->STUDENT_DASH->degreetitle.' in '.$USER->STUDENT_DASH->curriculumtitle.'</h3>
+						<h3 class="tableHeader">'.$USER->STUDENT_DASH->degreetitle.'</h3>
 						<div id="statBox" class="stats" style="margin-bottom:20px;">
 							<div class="statChartHolder">
 								<!--Pie Chart -->
@@ -220,26 +219,47 @@ class block_studentdash extends block_base {
 								<!--End Chart -->
 							</div>
 						</div>
-						<div id="statBox"> 
-						<table class="stats">
+						<div id="statBox">
+						
+						<table class="stats" '.($USER->STUDENT_DASH->percentcompletion >= 100  ? 'style="display:block"' : 'style="display:none"' ).'>
 							<tr>
 								<td>
-									<span class="blueLarge">'.(($USER->STUDENT_DASH->primarygpa == '.0000') ? 'N/A' : $USER->STUDENT_DASH->primarygpa).'</span><br />overall GPA <br><br>
-									<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? ($USER->STUDENT_DASH->coursesremaining.'</span><br />course'.(($USER->STUDENT_DASH->coursesremaining == 1) ? '' : 's').'&nbsp;left') : ('Congratulations on completing your degree</span>')).'<br>
+								<span class="blueLarge">Congratulations on completing your degree! <br /><br /></span>
+								<span class="grayLarge">Overall GPA: '.($USER->STUDENT_DASH->primarygpa == '0.0000' ? 'N/A' : $USER->STUDENT_DASH->primarygpa).'</span>
+								</td>
+							</tr>
+						</table>
+						
+						<table class="stats" '.($USER->STUDENT_DASH->percentcompletion < 100 ? 'style="display:block"' : 'style="display:none"' ).'>
+							<tr>
+								<td>
+									<span class="blueLarge">'.($USER->STUDENT_DASH->primarygpa == '0.0000' ? 'N/A' : $USER->STUDENT_DASH->primarygpa).'</span><br />overall&nbsp;GPA
 								</td>
 								<td>
-									<span class="blueLarge">'.(($USER->STUDENT_DASH->percentcompletion < 100) ? '<span id="expectedgraduation"></span></span><br />projected graduation<br><br>
-									<span class="blueLarge">'.$USER->STUDENT_DASH->creditsremaining.'</span><br/>credit'.(($USER->STUDENT_DASH->creditsremaining == 1) ? '' : 's').'&nbsp;left<br>'
-															: ('    </span><br>             <br><br>               <br>'))
-								.'</td>
+									<span class="blueLarge">'.$USER->STUDENT_DASH->coursesremaining.'</span><br />course'.($USER->STUDENT_DASH->coursesremaining == 1 ? '' : 's').'&nbsp;left
+								</td>
+								<td>
+									<span class="blueLarge">'.$USER->STUDENT_DASH->creditsremaining.'</span><br />credit'.($USER->STUDENT_DASH->creditsremaining == 1 ? '' : 's').'&nbsp;left
+								</td>
 							</tr>
 							<tr>
-								<td colspan="1">
-									<span class="blueLarge" id="creditsPerTerm"></span><br />credits/semester
+								<td colspan ="1">
+									projected&nbsp;graduation
 								</td>
-								<td colspan="2" width="220" align="left">'.(($USER->STUDENT_DASH->percentcompletion < 100) ?
-									'<!-------------------------------------------------------- BEGIN SLIDER -->
-									&nbsp;
+								<td colspan="2" width="200">
+									<span class="blueLarge" id="expectedgraduation"></span>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3" align="center">
+									based&nbsp;on&nbsp;
+									<span class="blueLarge" id="creditsPerTerm"></span>&nbsp;
+									credits/semester
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3">
+									<!-------------------------------------------------------- BEGIN SLIDER -->
 									<div id ="slider"></div>
 									<script src="'.$CFG->wwwroot.'/blocks/studentdash/nouislider.min.js"></script>
 									<script>
@@ -283,12 +303,20 @@ class block_studentdash extends block_base {
 											recalculate();
 										});
 									</script>
-									
-									<!-------------------------------------------------------- END SLIDER -->' : '').'
+									<!-------------------------------------------------------- END SLIDER -->
 								</td>
 							</tr>
+							<!--- <tr>
+								<td colspan="3" align="center" valign="top">
+									<i class="fa fa-arrow-circle-left"></i>
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									adjust your credit load
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									<i class="fa fa-arrow-circle-right"></i>
+								</td>
+							</tr> --->
 							<tr>
-								<td colspan="3" align="left">'.(($USER->STUDENT_DASH->advisorfirst == '') ? '' : 'Your Academic Advisor is '.$USER->STUDENT_DASH->advisorfirst.' '.$USER->STUDENT_DASH->advisorlast).'</td>
+								<td colspan="3" align="center">'.(($USER->STUDENT_DASH->advisorfirst == '') ? '' : 'Your Academic Advisor is '.$USER->STUDENT_DASH->advisorfirst.' '.$USER->STUDENT_DASH->advisorlast).'</td>
 							</tr>
 						</table>
 						</div>

@@ -107,6 +107,13 @@
 	  font-size: 1.8em;
 	  font-weight: bold;
 	}
+	
+	.grayLarge {
+	  color: #B6B5B5;
+	  font-size: 1.4em;
+	  font-weight: bold;
+	}
+
 
 	.tableHeader {
 	  color: #003876!important;
@@ -126,10 +133,7 @@
 	  line-height: 20px !important;
 	}
 	#dash table {
-	display:inline-block;
 	position: relative;
-	float: left;
-	text
 	}
 	.stats {
 	border: none;
@@ -160,7 +164,7 @@
 
 /* SEBTS CUSTOMIZATIONS */
 #slider {
-    margin-left: 15px !important;
+    margin: 0px 5px !important;
 }
 
 .noUi-handle, .noUi-active {
