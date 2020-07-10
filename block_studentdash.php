@@ -42,7 +42,7 @@ class block_studentdash extends block_base {
             return $this->content;
         }
 
-        $username = $USER->username;    // Get the logged on user ID, it will be used to cross reference Campus6..PersonUser table to find the user's PowerCampus PEOPLE_ID
+        $username = $USER->idnumber;    // Get the logged on user ID, it will be used to cross reference Campus6..PersonUser table to find the user's PowerCampus PEOPLE_ID
 
         if ($USER->STUDENT_DASH == null) {            	 // Get currently logged on user's student dashboard info if the STUDENT_DASH object is not already loaded;
             $USER->STUDENT_DASH = new stdClass();     //   this prevents multiple hits on the database server during the same session when chances are nothing has changed
