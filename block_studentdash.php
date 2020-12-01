@@ -75,7 +75,7 @@ class block_studentdash extends block_base {
             $USER->STUDENT_DASH->percentcompletion = 100 * $USER->STUDENT_DASH->creditstaken / $USER->STUDENT_DASH->creditmin;
         }
 		
-		if ($USER->STUDENT_DASH->degree != 'PHD' and $USER->STUDENT_DASH->curriculumtitle != 'DLSA')  {    // Exclude block from non-PHD and DLSA students
+		if ($USER->STUDENT_DASH->degree != 'PHD' && $USER->STUDENT_DASH->curriculum != 'DLSA')  {    // Exclude block from non-PHD and DLSA students
 			$this->title = 'My Academic Progress';
 			$this->content = new stdClass;
 
